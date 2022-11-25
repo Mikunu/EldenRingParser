@@ -8,11 +8,11 @@ input_folder = os.path.join(ROOT_FOLDER, 'files', 'input')
 output_folder = os.path.join(ROOT_FOLDER, 'files', 'output')
 
 def main():
-    weapon_parser = WeaponParser(input_folder)
-    weapon_parser.write_weapons_to_file(output_folder)
+    # weapon_parser = WeaponParser(input_folder)
+    # weapon_parser.write_weapons_to_file(output_folder)
 
-    # armor_parser = ArmorParser(input_folder)
-    # armor_parser.write_armor_to_file(output_folder)
+    armor_parser = ArmorParser(input_folder)
+    armor_parser.write_armor_to_file(output_folder)
 
     # magic_parser = MagicParser(input_folder)
     # magic_parser.write_magic_to_file(output_folder)
