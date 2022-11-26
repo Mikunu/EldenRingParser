@@ -10,8 +10,8 @@ def trueround(number: int | float, places=0):
 
 
 def get_items_ids(df: pd.DataFrame):
-    items = df[['Row ID', 'Row Name']]
-    items_mask = pd.notnull(items['Row Name'])
+    items = df[['ID', 'Name']]
+    items_mask = pd.notnull(items['Name'])
     items = items[items_mask]
     ids = []
     for row in items.itertuples():
