@@ -46,6 +46,12 @@ class ArmorParser:
         self.df_armor: pd.DataFrame = pd.read_csv(os.path.join(path, 'stats/EquipParamProtector.csv'),
                                                   delimiter=',', on_bad_lines='skip', low_memory=False)
 
+        with open(os.path.join(self.base_folder_path, 'en/ProtectorName.fmg.xml'), 'rb') as f:
+            self.eng_names = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, 'ru/ProtectorName.fmg.xml'), 'rb') as f:
+            self.names = BeautifulSoup(f, 'lxml')
+
     def get_stats_protector(self, item_id: int) -> dict:
         weapon = self.df_armor.loc[self.df_armor['ID'] == item_id]
         stats = weapon[[
@@ -78,12 +84,6 @@ class ArmorParser:
         return stats
 
     def write_armor_to_file(self, path_to_write: str = ''):
-        with open(os.path.join(self.base_folder_path, 'en/ProtectorName.fmg.xml'), 'rb') as f:
-            eng_names = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, 'ru/ProtectorName.fmg.xml'), 'rb') as f:
-            names = BeautifulSoup(f, 'lxml')
-
         file = open(os.path.join(path_to_write, 'armor_data.txt'),
                     'a', encoding='utf-8')
 
@@ -92,8 +92,8 @@ class ArmorParser:
         for item_id in items_ids:
             if item_id < 10500:  # means that it's not an armor item
                 continue
-            name = names.find(id=item_id)
-            eng_name = eng_names.find(id=item_id)
+            name = self.names.find(id=item_id)
+            eng_name = self.eng_names.find(id=item_id)
             if name is None or eng_name is None:
                 continue
             try:
