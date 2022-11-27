@@ -30,6 +30,19 @@ class MagicParser:
         self.df_duration: pd.DataFrame = pd.read_csv(os.path.join(path, 'stats/SpEffectParam.csv'),
                                                      delimiter=',', on_bad_lines='skip', low_memory=False)
 
+        with open(os.path.join(self.base_folder_path, 'en/GoodsName.fmg.xml'), 'rb') as f:
+            self.eng_names = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, 'ru/GoodsName.fmg.xml'), 'rb') as f:
+            self.names = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, 'ru/GoodsInfo.fmg.xml'), 'rb') as f:
+            self.captions = BeautifulSoup(f, 'lxml')
+        # I don't know why I wrote this and why it's useless
+        with open(os.path.join(self.base_folder_path, 'ru/GoodsInfo2.fmg.xml'), 'rb') as f:
+            self.captions2 = BeautifulSoup(f, 'lxml')
+
+
     def get_stats_magic(self, item_id: int):
         magic = self.df_magic.loc[self.df_magic['ID'] == item_id]
         eng_name = magic.iloc[0]['Name']
@@ -63,26 +76,14 @@ class MagicParser:
         return stats
 
     def write_magic_to_file(self, path_to_write: str = ''):
-        with open(os.path.join(self.base_folder_path, 'en/GoodsName.fmg.xml'), 'rb') as f:
-            eng_names = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, 'ru/GoodsName.fmg.xml'), 'rb') as f:
-            names = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, 'ru/GoodsInfo.fmg.xml'), 'rb') as f:
-            captions = BeautifulSoup(f, 'lxml')
-        # I don't know why I wrote this and why it's useless
-        with open(os.path.join(self.base_folder_path, 'ru/GoodsInfo2.fmg.xml'), 'rb') as f:
-            captions2 = BeautifulSoup(f, 'lxml')
-
         file = open(os.path.join(path_to_write, 'magic.txt'), 'w', encoding='utf-8')
 
         items_ids = get_items_ids(self.df_magic)
 
         for item_id in items_ids:
-            name = names.find(id=item_id)
-            eng_name = eng_names.find(id=item_id)
-            caption = captions.find(id=item_id)
+            name = self.names.find(id=item_id)
+            eng_name = self.eng_names.find(id=item_id)
+            caption = self.captions.find(id=item_id)
 
             if name is None or eng_name is None:
                 continue

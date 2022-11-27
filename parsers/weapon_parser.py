@@ -34,6 +34,21 @@ class WeaponParser:
         self.df_weapon_art: pd.DataFrame = pd.read_csv(os.path.join(self.base_folder_path, 'stats/SwordArtsParam.csv'),
                                                    delimiter=',', index_col=False)
 
+        with open(os.path.join(self.base_folder_path, r'ru/WeaponName.fmg.xml'), 'rb') as f:
+            self.names = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, r'en/WeaponName.fmg.xml'), 'rb') as f:
+            self.eng_names = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, r'ru/WeaponCaption.fmg.xml'), 'rb') as f:
+            self.captions = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, r'ru/ArtsName.fmg.xml'), 'rb') as f:
+            self.arts_names = BeautifulSoup(f, 'lxml')
+
+        with open(os.path.join(self.base_folder_path, r'ru/ArtsCaption.fmg.xml'), 'rb') as f:
+            self.arts_captions = BeautifulSoup(f, 'lxml')
+
     def get_weapon_stats(self, item_id: int) -> dict:
         """
         Get weapon stats from EquipParamWeapon.csv file
@@ -81,23 +96,6 @@ class WeaponParser:
         return requirements
 
     def write_weapons_to_file(self, path_to_write: str = ''):
-        with open(os.path.join(self.base_folder_path, r'ru/WeaponName.fmg.xml'), 'rb') as f:
-            names = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, r'en/WeaponName.fmg.xml'), 'rb') as f:
-            eng_names = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, r'ru/WeaponCaption.fmg.xml'), 'rb') as f:
-            captions = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, r'ru/ArtsName.fmg.xml'), 'rb') as f:
-            arts_names = BeautifulSoup(f, 'lxml')
-
-        with open(os.path.join(self.base_folder_path, r'ru/ArtsCaption.fmg.xml'), 'rb') as f:
-            arts_captions = BeautifulSoup(f, 'lxml')
-
-        print('All weapon data loaded')
-
         file = open(os.path.join(path_to_write, 'weapons.txt'), 'w', encoding='utf-8')
 
         items_ids = get_items_ids(self.df_weapon)
@@ -110,9 +108,9 @@ class WeaponParser:
             item_id = item_id // 10000 * 10000
             if item_id == prev_item_id:
                 continue
-            name = names.find(id=item_id)
-            eng_name = eng_names.find(id=item_id)
-            caption = captions.find(id=item_id)
+            name = self.names.find(id=item_id)
+            eng_name = self.eng_names.find(id=item_id)
+            caption = self.captions.find(id=item_id)
             weapon_art_id = self.get_weapon_art(item_id)
 
             weapon_art = self.df_weapon_art.loc[self.df_weapon_art['ID'] == weapon_art_id]
@@ -125,8 +123,8 @@ class WeaponParser:
                 art_name = '<text></text>'
                 art_caption = '<text></text>'
             else:
-                art_name = arts_names.find(id=weapon_art_id)
-                art_caption = arts_captions.find(id=weapon_art_id)
+                art_name = self.arts_names.find(id=weapon_art_id)
+                art_caption = self.arts_captions.find(id=weapon_art_id)
 
             if name is None or eng_name is None or caption is None or art_name is None or art_caption is None:
                 print(f'Problem with {item_id}')
@@ -141,7 +139,6 @@ class WeaponParser:
                 result = f'{info_s}\n{requirements_s}\n{stats_s}\n{"-" * 50}\n'
                 result = result.replace('\n\n\n', '\n')
                 file.write(result)
-                # print(f'"{name.text}" proceeded')
             except Exception as e:
                 print(f'Exception with item_id: {item_id}. {e}')
 
