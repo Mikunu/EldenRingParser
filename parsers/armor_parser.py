@@ -4,7 +4,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 
 
-def get_armor_stats_from_dict(stats: dict) -> str:
+def get_armor_stats_from_dict(stats: dict) -> tuple[str, list[str]]:
     armor_type: str = ''
     if stats["headEquip"]:
         armor_type = 'Голова'
