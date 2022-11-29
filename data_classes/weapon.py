@@ -6,12 +6,12 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True, kw_only=True)
 class AttackStats:
-    attackBasePhysics: int
-    attackBaseMagic: int
-    attackBaseFire: int
-    attackBaseThunder: int
-    attackBaseDark: int
-    throwAtkRate: int
+    attack_base_physics: int
+    attack_base_magic: int
+    attack_base_fire: int
+    attack_base_thunder: int
+    attack_base_dark: int
+    throw_atk_rate: int
 
 
 @dataclass(frozen=True, kw_only=True)

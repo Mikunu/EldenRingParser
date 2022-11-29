@@ -15,6 +15,6 @@ class Magic(BaseItem):
     fp_cost: int
     stamina_cost: int
     slots_used: int
-    effectEndurance: float
+    effect_endurance: float
     stat_requirements: StatRequirements
 

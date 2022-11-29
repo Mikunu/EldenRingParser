@@ -4,9 +4,10 @@ from pydantic import BaseModel
 
 @dataclass(frozen=True, kw_only=True)
 class Resists(BaseModel):
-    resistPoison: float
-    resistBlood: float
-    resistFreeze: float
-    resistCurse: float
-    resistSleep: float
-    resistMadness: float
+    resist_poison: int
+    resist_blood: int
+    resist_freeze: int
+    resist_curse: int
+    resist_sleep: int
+    resist_madness: int
+

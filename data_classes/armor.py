@@ -14,9 +14,9 @@ class TypeEquip(Enum):
 
 @dataclass(frozen=True, kw_only=True)
 class Armor(Item):
-    typeEquip: TypeEquip
+    type_equip: TypeEquip
     resists: Resists
-    cutRate: CutRate
+    cut_rate: CutRate
     balance: float
 
 
